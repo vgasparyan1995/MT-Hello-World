@@ -23,13 +23,14 @@ public:
 
 private:
     using Pool = std::vector<std::thread>;
-    using CondVars = std::vector<std::conditional_variable>;
+    using CondVars = std::vector<std::condition_variable>;
     using Tasks = std::queue<std::function<void()> >;
     using Queues = std::vector<Tasks>;
+    using MutexT = std::mutex;
 
     Pool        m_pool;
     CondVars    m_conditionVariables;
     Queues      m_taskQueues;
-    std::mutex  m_mutex;
+    MutexT      m_mutex;
     bool        m_stop;
 };

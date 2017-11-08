@@ -12,11 +12,14 @@ public:
     void setNextPrinter(Printer* p);
     void setNextText(const std::string& text);
     void print(const std::string& text);
+    void setLimit(const int limit);
 
 private:
     ThreadPool* m_threadPool;
-    const int   m_threadIndex;
+    int         m_threadIndex;
     Printer*    m_nextPrinter;
     std::string m_nextText;
+    int         m_index;
+    int         m_limit;
     bool        m_readyToPrint;
 };

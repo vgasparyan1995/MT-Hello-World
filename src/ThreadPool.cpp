@@ -5,13 +5,13 @@ ThreadPool::ThreadPool(const int threadCount)
     , m_taskQueues(threadCount)
     , m_stop(false)
 {
-    if (int <= 0) {
+    if (threadCount <= 0) {
         throw std::invalid_argument("The argument \'threadCount\' must be greater than 0.");
     }
     for (int i = 0; i < threadCount; ++i) {
-        m_pool.emplace_back([this] ()
+        m_pool.emplace_back([this, i] ()
             {
-                std::unique_lock<std::mutex> lk(m_mutex);
+                std::unique_lock<MutexT> lk(m_mutex);
                 while (true) {
                     while (!m_stop && m_taskQueues[i].empty()) {
                         m_conditionVariables[i].wait(lk);
@@ -29,7 +29,6 @@ ThreadPool::ThreadPool(const int threadCount)
 
 ThreadPool::~ThreadPool()
 {
-    stop();
     for (auto& thread : m_pool) {
         thread.join();
     }
@@ -42,9 +41,8 @@ int ThreadPool::numberOfThreads() const
 
 void ThreadPool::schedule(const int threadIndex, std::function<void()> f)
 {
-    std::lock_guard<std::mutex> lk(m_mutex);
-    m_taskQueues[i].push(f);
-    m_conditionVariables[i].notify_one();
+    m_taskQueues[threadIndex].push(f);
+    m_conditionVariables[threadIndex].notify_one();
 }
 
 void ThreadPool::stop()

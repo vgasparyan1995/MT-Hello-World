@@ -1,11 +1,16 @@
+#include <iostream>
+#include <limits>
+
 #include "ThreadPool.h"
 
 #include "Printer.h"
 
 Printer::Printer()
     : m_threadPool(nullptr)
-    , m_threadIndex(0),
+    , m_threadIndex(0)
     , m_nextPrinter(nullptr)
+    , m_index(0)
+    , m_limit(std::numeric_limits<int>::max())
     , m_readyToPrint(false)
 {
 }
@@ -21,7 +26,7 @@ void Printer::setThreadPool(ThreadPool* threadPool, const int threadIndex)
 
 void Printer::setNextPrinter(Printer* p)
 {
-    m_nextPrinter = printer;
+    m_nextPrinter = p;
 }
 
 void Printer::setNextText(const std::string& text)
@@ -34,6 +39,10 @@ void Printer::print(const std::string& text)
     if (!m_readyToPrint) {
         return;
     }
+    if (m_index++ >= m_limit) {
+        m_threadPool->stop();
+        return;
+    }
     m_threadPool->schedule(m_threadIndex, [this, text] ()
         {
             std::cout << text;
@@ -43,3 +52,7 @@ void Printer::print(const std::string& text)
         });
 }
 
+void Printer::setLimit(const int limit)
+{
+    m_limit = limit;
+}
