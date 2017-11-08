@@ -66,6 +66,6 @@ int main(int argc, char** argv)
     } catch (const std::exception& e) {
         std::cout << e.what() << std::endl;
     } catch (...) {
-        std::cout << "Exception not handled." << std::endl;
+        std::cout << "Unknown exception." << std::endl;
     }
 }
