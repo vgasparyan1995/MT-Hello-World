@@ -19,6 +19,10 @@ $(MPEXECUTABLE): $(MPOBJECTS)
 objects/%.o: src/%.cpp
 	$(CC) $(CPPFLAGS) $(LIBS) $(SOURCES) -c
 	$(CC) $(CPPFLAGS) $(LIBS) $(MPSOURCES) -c
+	if [ ! -d "objects" ]; \
+	then \
+		mkdir objects; \
+	fi
 	mv *.o objects
 
 clean:
