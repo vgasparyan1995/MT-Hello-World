@@ -6,7 +6,7 @@ There are two executable targets defined in the makefile. Use
 make
 ```
 to build them both.
-It will create a subdirectory called 'objects/' with all compiled object files in it and two executables: `hello_world` and `mp_hello_world'.
+It will create a subdirectory called `objects/` with all compiled object files in it and two executables: `hello_world` and `mp_hello_world`.
 To build only one of them use:
 ```
 make hello_world
